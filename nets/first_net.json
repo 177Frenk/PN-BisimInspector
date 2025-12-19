@@ -1,0 +1,344 @@
+{
+   "places":[
+      {
+         "id":"place 1",
+         "name":"P1",
+         "namePositionX":338,
+         "namePositionY":46.8125,
+         "posX":358,
+         "posY":81.8125,
+         "connections":[
+            "Start Arc 1",
+            "Finish Arc 2"
+         ],
+         "nTokens":1
+      },
+      {
+         "id":"place 2",
+         "name":"C1",
+         "namePositionX":551,
+         "namePositionY":41.8125,
+         "posX":571,
+         "posY":76.8125,
+         "connections":[
+            "Start Arc 5",
+            "Finish Arc 8"
+         ],
+         "nTokens":1
+      },
+      {
+         "id":"place 3",
+         "name":"D1",
+         "namePositionX":302.98828125,
+         "namePositionY":311.8125,
+         "posX":360,
+         "posY":301.8125,
+         "connections":[
+            "Finish Arc 3",
+            "Start Arc 4"
+         ],
+         "nTokens":0
+      },
+      {
+         "id":"place 4",
+         "name":"C'1",
+         "namePositionX":593.32421875,
+         "namePositionY":472.8125,
+         "posX":600,
+         "posY":418.8125,
+         "connections":[
+            "Finish Arc 6",
+            "Start Arc 7"
+         ],
+         "nTokens":0
+      }
+   ],
+   "transitions":[
+      {
+         "id":"transition 1",
+         "name":"prod",
+         "namePositionX":312.6640625,
+         "namePositionY":198.8125,
+         "posX":348.5,
+         "posY":165.8125,
+         "connections":[
+            "Finish Arc 1",
+            "Start Arc 2",
+            "Start Arc 3"
+         ],
+         "isEnabled":false
+      },
+      {
+         "id":"transition 2",
+         "name":"del",
+         "namePositionX":465.32421875,
+         "namePositionY":427.8125,
+         "posX":465.5,
+         "posY":350.8125,
+         "connections":[
+            "Finish Arc 4",
+            "Finish Arc 5",
+            "Start Arc 6"
+         ],
+         "isEnabled":false
+      },
+      {
+         "id":"transition 3",
+         "name":"cons",
+         "namePositionX":708.1015625,
+         "namePositionY":460.8125,
+         "posX":708.5,
+         "posY":384.8125,
+         "connections":[
+            "Finish Arc 7",
+            "Start Arc 8"
+         ],
+         "isEnabled":false
+      }
+   ],
+   "arcs":[
+      {
+         "id":"Arc 1",
+         "name":"A1",
+         "type":"normal",
+         "startingPositionArc":[
+            [
+               358,
+               106.8125,
+               "place 1"
+            ]
+         ],
+         "endPositionArc":[
+            [
+               358,
+               165.8125,
+               "transition 1"
+            ]
+         ],
+         "start":"place 1",
+         "end":"transition 1",
+         "intermediatePoints":[
+
+         ],
+         "isEnable":false,
+         "weight":1,
+         "weightPos":{
+            "x":338,
+            "y":131.17148384862244
+         }
+      },
+      {
+         "id":"Arc 2",
+         "name":"A2",
+         "type":"normal",
+         "startingPositionArc":[
+            [
+               358,
+               165.8125,
+               "transition 1"
+            ]
+         ],
+         "endPositionArc":[
+            [
+               358,
+               106.8125,
+               "place 1"
+            ]
+         ],
+         "start":"transition 1",
+         "end":"place 1",
+         "intermediatePoints":[
+
+         ],
+         "isEnable":false,
+         "weight":1,
+         "weightPos":{
+            "x":378,
+            "y":141.45351615137753
+         }
+      },
+      {
+         "id":"Arc 3",
+         "name":"A3",
+         "type":"normal",
+         "startingPositionArc":[
+            [
+               360,
+               215.8125,
+               "transition 1"
+            ]
+         ],
+         "endPositionArc":[
+            [
+               360,
+               276.8125,
+               "place 3"
+            ]
+         ],
+         "start":"transition 1",
+         "end":"place 3",
+         "intermediatePoints":[
+
+         ],
+         "isEnable":false,
+         "weight":1,
+         "weightPos":{
+            "x":339.99999999999994,
+            "y":242.17148384862247
+         }
+      },
+      {
+         "id":"Arc 4",
+         "name":"A4",
+         "type":"normal",
+         "startingPositionArc":[
+            [
+               382.6737581172454,
+               312.34343978905235,
+               "place 3"
+            ]
+         ],
+         "endPositionArc":[
+            [
+               465.5,
+               350.8125,
+               "transition 2"
+            ]
+         ],
+         "start":"place 3",
+         "end":"transition 2",
+         "intermediatePoints":[
+
+         ],
+         "isEnable":false,
+         "weight":1,
+         "weightPos":{
+            "x":425.657567322681,
+            "y":354.35940828092635
+         }
+      },
+      {
+         "id":"Arc 5",
+         "name":"A5",
+         "type":"normal",
+         "startingPositionArc":[
+            [
+               563.9529514294946,
+               100.79872743252757,
+               "place 2"
+            ]
+         ],
+         "endPositionArc":[
+            [
+               490.5,
+               350.8125,
+               "transition 2"
+            ]
+         ],
+         "start":"place 2",
+         "end":"transition 2",
+         "intermediatePoints":[
+
+         ],
+         "isEnable":false,
+         "weight":1,
+         "weightPos":{
+            "x":481.07569498799467,
+            "y":311.9385694675636
+         }
+      },
+      {
+         "id":"Arc 6",
+         "name":"A6",
+         "type":"normal",
+         "startingPositionArc":[
+            [
+               490.5,
+               400.8125,
+               "transition 2"
+            ]
+         ],
+         "endPositionArc":[
+            [
+               575.3310795379634,
+               414.7573349925419,
+               "place 4"
+            ]
+         ],
+         "start":"transition 2",
+         "end":"place 4",
+         "intermediatePoints":[
+
+         ],
+         "isEnable":false,
+         "weight":1,
+         "weightPos":{
+            "x":537.9046886454986,
+            "y":428.87346990137684
+         }
+      },
+      {
+         "id":"Arc 7",
+         "name":"A7",
+         "type":"normal",
+         "startingPositionArc":[
+            [
+               625,
+               418.8125,
+               "place 4"
+            ]
+         ],
+         "endPositionArc":[
+            [
+               708.5,
+               418.8125,
+               "transition 3"
+            ]
+         ],
+         "start":"place 4",
+         "end":"transition 3",
+         "intermediatePoints":[
+
+         ],
+         "isEnable":false,
+         "weight":1,
+         "weightPos":{
+            "x":673.8589838486224,
+            "y":438.81249999999994
+         }
+      },
+      {
+         "id":"Arc 8",
+         "name":"A8",
+         "type":"normal",
+         "startingPositionArc":[
+            [
+               708.5,
+               384.8125,
+               "transition 3"
+            ]
+         ],
+         "endPositionArc":[
+            [
+               581.1912710093472,
+               99.64094706093778,
+               "place 2"
+            ]
+         ],
+         "start":"transition 3",
+         "end":"place 2",
+         "intermediatePoints":[
+
+         ],
+         "isEnable":false,
+         "weight":1,
+         "weightPos":{
+            "x":613.575468003612,
+            "y":123.11995438741259
+         }
+      }
+   ],
+   "nPlaces":4,
+   "nTransitions":3,
+   "nArcs":8
+}
