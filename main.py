@@ -13,18 +13,12 @@ second_net = utilities.parse_net(raw_second_net)
 first_net_m0 = utilities.build_start_marking(first_net)
 second_net_m0 = utilities.build_start_marking(second_net)
 
-transitions_post_pre_sets = {}
+first_net_pre_post_sets = utilities.build_transitions_pre_post_sets(first_net)
+second_net_pre_post_sets = utilities.build_transitions_pre_post_sets(second_net)
 
-for transition in first_net["transitions"]:
-    transitions_post_pre_sets[transition["name"]] = {"preset": [], "postset": []}
-    for arc in first_net["arcs"]:
-        if transition["id"] == arc["end"]:
-            transitions_post_pre_sets[transition]["preset"].add(arc["start"])
-        else:
-            transitions_post_pre_sets[transition]["postset"].add(arc["end"])
+#print(f"first: {json.dumps(first_net_pre_post_sets)}")
+#print(f"second: {second_net_pre_post_sets}")
 
 
-
-
-print(json.dumps(first_net, indent=2))
-print(transitions_post_pre_sets)
+print(second_net_pre_post_sets)
+#print(json.dumps(second_net, indent=2))

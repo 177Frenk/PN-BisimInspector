@@ -74,5 +74,5 @@ def build_start_marking(net):
     l = []
     for place in net["places"]:
         for _ in range(place["nTokens"]):
-            l.append(place["name"])
+            l.append(place["name"])    #append to l the place name n times as there are tokens in that place so that passing l to Counter() will give us the mark for that place
     return Counter(l)
