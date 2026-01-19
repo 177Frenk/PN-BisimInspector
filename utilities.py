@@ -35,10 +35,10 @@ def parse_net(data):
                             elif subkey == "connections":
                                 for connection in data[key][subdict][subkey]:
                                     if connection[0] == "S":
-                                        new_connection = f"{data["transitions"][subdict]["name"]} - {connection.split()[1]} {connection.split()[2]}"
+                                        new_connection = f"{data["transitions"][subdict]["name"]}|{data["transitions"][subdict]["id"].split()[1]} - {connection.split()[1]} {connection.split()[2]}"    #inserting the id number after the transition name to distinguish between multiple transitions with the same name
                                         start_connections.append(new_connection)
                                     else:
-                                        new_connection = f"{connection.split()[1]} {connection.split()[2]} - {data["transitions"][subdict]["name"]}"
+                                        new_connection = f"{connection.split()[1]} {connection.split()[2]} - {data["transitions"][subdict]["name"]}|{data["transitions"][subdict]["id"].split()[1]}"    #as above
                                         finish_connections.append(new_connection)
 
                 case "arcs":    #keeping only id, name, start, end and weight for the arcs
@@ -76,3 +76,20 @@ def build_start_marking(net):
         for _ in range(place["nTokens"]):
             l.append(place["name"])    #append to l the place name n times as there are tokens in that place so that passing l to Counter() will give us the mark for that place
     return Counter(l)
+
+def build_transition_pre_post_sets(net, transition_name, transition_id):
+    """Return a dictionary with two lists preset and postset for an inputted transition for a specific net"""
+    formatted_transition = f"{transition_name}|{transition_id.split(" ")[1]}"    #use transition_name and id to format the transition like in the complete_transitions list e.g. prod|1
+
+    preset = []
+    postset = []
+
+    for cc in net["complete_connections"]:
+        if formatted_transition == cc.split(" -> ")[0]:    #check if the transition is in the first or second half of the complete connection and put the place in the preset or postset accordingly e.g. prod|1 -> P2 or vice versa
+            postset.append(cc.split(" -> ")[1])
+        elif formatted_transition == cc.split(" -> ")[1]:
+            preset.append(cc.split(" -> ")[0])
+
+    dict_to_return = {"preset": preset, "postset": postset}
+
+    return dict_to_return
