@@ -69,14 +69,6 @@ def parse_net(data):
 
     return net_to_return    #return the new formatted net dictionary with only the useful information
 
-def build_start_marking(net):
-    """Take a Petri Net dictionary and return the initial marking m0 for that net"""
-    l = []
-    for place in net["places"]:
-        for _ in range(place["nTokens"]):
-            l.append(place["name"])    #append to l the place name n times as there are tokens in that place so that passing l to Counter() will give us the mark for that place
-    return Counter(l)
-
 def build_transition_pre_post_sets(net, transition_name, transition_id):
     """Return a dictionary with two lists preset and postset for an inputted transition for a specific net"""
     formatted_transition = f"{transition_name}|{transition_id.split(" ")[1]}"    #use transition_name and id to format the transition like in the complete_transitions list e.g. prod|1
