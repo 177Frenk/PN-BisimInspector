@@ -1,25 +1,16 @@
 import json
-import utilities
-import itertools
-from place_bisimulation import PlaceBisimulation
+from petri_parser import parse_net
+from place_bisimulation import find_bisimulation
 
-with open('nets/first_net.json', 'r') as file:
+with open('nets/coffeenet.json', 'r') as file:
     raw_first_net = json.load(file)
 
-with open('nets/second_net.json', 'r') as file:
+with open('nets/coffeeteanet.json', 'r') as file:
     raw_second_net = json.load(file)
 
-first_net = utilities.parse_net(raw_first_net)
-second_net = utilities.parse_net(raw_second_net)
+first_net = parse_net(raw_first_net)
+second_net = parse_net(raw_second_net)
 
+#print(json.dumps(first_net, indent=2))
 
-#first_net_pre_post_sets = utilities.build_transitions_pre_post_sets(first_net)
-#second_net_pre_post_sets = utilities.build_transitions_pre_post_sets(second_net)
-
-#print(f"first: {json.dumps(first_net_pre_post_sets)}")
-#print(f"second: {second_net_pre_post_sets}")
-
-#print(json.dumps(second_net, indent=2))
-
-pb = PlaceBisimulation(net1=first_net, net2=second_net)
-pb.print_m0()
+are_bisimilar = find_bisimulation(net1=first_net, net2=second_net)
