@@ -1,6 +1,7 @@
 import itertools
-import custom_exception
 from collections import Counter
+from custom_exception import LabelMismatchException, MarkingSizeException, DifferentTransitionsException
+
 
 class PlaceBisimulation:
 
@@ -79,9 +80,6 @@ class PlaceBisimulation:
 
     def build_rr(self, first_net_transition_postset, second_net_transition_postset):
         """Build only valid RR set. If transitions differ then the couple is pruned."""
-        l1 = []
-        l2 = []
-        label_mismatched_couples = []
 
         if first_net_transition_postset is None and second_net_transition_postset is None:
             l1 = self.net1_m0.keys()
@@ -93,20 +91,30 @@ class PlaceBisimulation:
         # create all the possible sets from the initial markings
         possibilities = [set(zip(l1, p)) for p in itertools.permutations(l2)]
         refined_possibilities = []
+        discarded_couples = []
 
         # refinement step to prune unextendable sets due to possible transitions difference
         for p in possibilities:
+            refined_possibility = set()
+            possibility_is_valid = True
+
             for couple in p:
+                # extract the transitions labels
                 (first_place_transitions_label, second_place_transitions_label) = self.transitions_4_preset_place(
                     couple[0], couple[1],True)
 
+                # check if the labels coincide. If so is a valid couple, if not the couple is discarded.
                 if check_labels(first_place_transitions_label, second_place_transitions_label):
-                    refined_possibilities.append(couple)
+                    refined_possibility.add(couple)
                 else:
-                    label_mismatched_couples.append(couple)
+                    discarded_couples.append(couple)
+                    possibility_is_valid = False
+                    break
+            if possibility_is_valid:
+                refined_possibilities.append(refined_possibility)
 
 
-        return [set(refined_possibilities)], label_mismatched_couples
+        return refined_possibilities, discarded_couples
 
     def transitions_4_preset_place(self, first_place, second_place, only_labels):
         """Returns a list containing all the transitions for which the place is in the preset"""
@@ -142,78 +150,92 @@ class PlaceBisimulation:
         message = ""
 
         while len(rr) > 0:
-            to_append_in_rr = []
-            possible_solution = rr.pop(0)
+            possible_solution = rr.pop()
 
-            if possible_solution != set(expanded_couples):
-                discard_solution = False
+            # check if every couple in the possible solution has been expanded
+            all_couple_expanded = all(couple in expanded_couples for couple in possible_solution)
 
+            if not all_couple_expanded:
                 for couple in possible_solution:
+                    # check if the selected couple has already been expanded. If so it tries to expand it, otherwise it goes to the next couple
                     if couple not in expanded_couples:
-                        expanded_couples.append(couple)
+                        try:
+                            (first_place_transitions_label,
+                             first_place_transitions_id,
+                             second_place_transitions_label,
+                             second_place_transitions_id) = self.transitions_4_preset_place(
+                                couple[0],
+                                couple[1],
+                                False)
 
-                        (first_place_transitions_label, first_place_transitions_id,
-                         second_place_transitions_label, second_place_transitions_id) = self.transitions_4_preset_place(
-                            couple[0],
-                            couple[1],
-                            False)
+                            # check for a label mismatch. If present raise a Label Mismatch Exception
+                            if not check_labels(first_place_transitions_label, second_place_transitions_label):
+                                raise LabelMismatchException(first_net_place=couple[0], second_net_place=couple[1],
+                                                             first_net_label=first_place_transitions_label,
+                                                             second_net_label=second_place_transitions_label)
 
-                        if check_labels(first_place_transitions_label, second_place_transitions_label):
+                            # start cycling through all transitions in both nets for the couple under examination
                             for transition1 in first_place_transitions_id:
-                                if not discard_solution:
-                                    first_net_transition_label = self.net1_labels[transition1]
-                                    first_net_transition_postset = self.net1_postsets[transition1]
-                                    for transition2 in second_place_transitions_id:
-                                        if not discard_solution:
-                                            second_net_transition_label = self.net2_labels[transition2]
-                                            second_net_transition_postset = self.net2_postsets[transition2]
+                                first_net_transition_label = self.net1_labels[transition1]
+                                first_net_transition_postset = self.net1_postsets[transition1]
+                                for transition2 in second_place_transitions_id:
+                                    second_net_transition_label = self.net2_labels[transition2]
+                                    second_net_transition_postset = self.net2_postsets[transition2]
 
-                                            if (first_net_transition_label == second_net_transition_label
-                                                    and sum(first_net_transition_postset.values())
-                                                    == sum(second_net_transition_postset.values())):
-                                                new_couples, label_mismatched_couples = self.build_rr(
-                                                    first_net_transition_postset,
-                                                    second_net_transition_postset)
+                                    # check if the post sets produced are in R+. If not raises a Marking Size Exception
+                                    if (first_net_transition_label == second_net_transition_label
+                                            and sum(first_net_transition_postset.values())
+                                            == sum(second_net_transition_postset.values())):
 
-                                                if new_couples == [set()]:
-                                                    discard_solution = True
+                                        # expands the couple and return new valid couples to be attached to the solution and the discarded ones due to transitions labels difference
+                                        new_couples, discarded_couples = self.build_rr(
+                                            first_net_transition_postset,
+                                            second_net_transition_postset)
 
-                                                for n_c in new_couples:
-                                                    current_solution = possible_solution.copy()
+                                        # if there isn't at least one new valid couple then it raises a Different Transitions Exception
+                                        if not new_couples:
+                                            raise DifferentTransitionsException(discarded_couples)
 
-                                                    current_solution.update(n_c)
+                                        # for every new valid couple it extends the current solution with the new couple creating new possible solutions to be examined
+                                        for n_c in new_couples:
+                                            current_solution = possible_solution.copy()
 
-                                                    if current_solution not in rr and not discard_solution:
-                                                        to_append_in_rr.append(current_solution)
+                                            current_solution.update(n_c)
 
-                                            else:
-                                                discard_solution = True
-                                                message = ""
+                                            # add the new possible solution to RR only if not already present
+                                            if current_solution not in rr:
+                                                rr.append(current_solution)
+                                    else:
+                                        raise MarkingSizeException(p1=couple[0], p2=couple[1],
+                                                                      label=first_net_transition_label)
 
+                        # for every exception it updates the error message to be displayed to the user and remove the invalid solutions from RR
+                        except LabelMismatchException as e:
+                            message = e.get_error_message()
+                            rr = [x for x in rr if couple not in x]
+                        except MarkingSizeException as e:
+                            message = e.get_error_message()
+                            rr = [x for x in rr if couple not in x]
+                        except DifferentTransitionsException as e:
+                            message = e.get_error_message()
+                            rr = [x for x in rr if couple not in x]
+
+                        # when the expansion finish without problems it marks the couple as expanded
                         else:
-                            break
+                            expanded_couples.append(couple)
+                            # if the expansion has ended correctly because we were in a couple with no transitions it add again the solution to RR in order to expand the other couples
+                            if not first_place_transitions_id:
+                                rr.append(possible_solution)
 
-                        if not discard_solution:
-                            rr = to_append_in_rr
+                        # break the cycle in order to check a new solution
                         break
             else:
                 r = possible_solution
 
         return r, message
 
-    def print_information(self):
-        print(f"net1m0: {self.net1_m0}\n"
-              f"net1presets: {self.net1_presets}\n"
-              f"net1postsets: {self.net1_postsets}\n"
-              f"net1labels: {self.net1_labels}")
-        print("\n"*10)
-        print(f"net1m0: {self.net2_m0}\n"
-              f"net1presets: {self.net2_presets}\n"
-              f"net1postsets: {self.net2_postsets}\n"
-              f"net1labels: {self.net2_labels}")
-
 def check_labels(first_place_transitions_label, second_place_transitions_label):
-    """If a place in a net is preset for a transition that the other place isn't preset for then we discard
+    """If a place in a net is preset for a transition that the other place isn't preset for, then we discard
     the relation. e.g. A = ['prod'], B = ['prod', 'prod'] ok, instead if B = ['prod', 'prod', 'del'] no"""
 
     return Counter(first_place_transitions_label).keys() == Counter(second_place_transitions_label).keys()
@@ -226,8 +248,7 @@ def find_bisimulation(net1, net2):
     if sum(pb.net1_m0.values()) != sum(pb.net2_m0.values()):
         return [], "the initial markings are not in R+ (additive closure) so the two nets cannot be place bisimilar"
 
-    #pb.print_information()
-    rr, label_mismatched_couples = pb.build_rr(first_net_transition_postset=None, second_net_transition_postset=None)
+    rr, _ = pb.build_rr(first_net_transition_postset=None, second_net_transition_postset=None)
     r, message = pb.try_bisimulation(rr)
 
     return r, message

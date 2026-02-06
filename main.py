@@ -2,10 +2,10 @@ import json
 from petri_parser import parse_net
 from place_bisimulation import find_bisimulation
 
-with open('nets/coffeenet.json', 'r') as file:
+with open('nets/seventh_net.json', 'r') as file:
     raw_first_net = json.load(file)
 
-with open('nets/coffeeteanet.json', 'r') as file:
+with open('nets/eighth_net.json', 'r') as file:
     raw_second_net = json.load(file)
 
 first_net = parse_net(raw_first_net)
