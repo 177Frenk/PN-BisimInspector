@@ -223,7 +223,7 @@ class PlaceBisimulation:
                         # when the expansion finish without problems it marks the couple as expanded
                         else:
                             expanded_couples.append(couple)
-                            # if the expansion has ended correctly because we were in a couple with no transitions it add again the solution to RR in order to expand the other couples
+                            # if the expansion has ended correctly because we were in a couple with no transitions it adds again the solution to RR in order to expand the other couples
                             if not first_place_transitions_id:
                                 rr.append(possible_solution)
 
