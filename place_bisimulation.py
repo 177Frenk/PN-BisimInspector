@@ -210,13 +210,7 @@ class PlaceBisimulation:
                                                                       label=first_net_transition_label)
 
                         # for every exception it updates the error message to be displayed to the user and remove the invalid solutions from RR
-                        except LabelMismatchException as e:
-                            message = e.get_error_message()
-                            rr = [x for x in rr if couple not in x]
-                        except MarkingSizeException as e:
-                            message = e.get_error_message()
-                            rr = [x for x in rr if couple not in x]
-                        except DifferentTransitionsException as e:
+                        except (LabelMismatchException, MarkingSizeException, DifferentTransitionsException) as e:
                             message = e.get_error_message()
                             rr = [x for x in rr if couple not in x]
 
