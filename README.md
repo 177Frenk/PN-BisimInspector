@@ -1,5 +1,5 @@
 # PN-BisimInspector
-PN-BisimInspector is a tool for place bisimilarity checking for P/T Petri Nets.
+PN-BisimInspector is a Bachelor’s thesis project focused on developing a dedicated tool for place bisimilarity analysis within P/T Petri Nets.
 
 ## How to use it
 In order to use the tool, first you will have to create the nets. You can do it here: https://petrinetsimulator.com.
