@@ -11,8 +11,6 @@ with open('nets/second_net.json', 'r') as file:
 first_net = parse_net(raw_first_net)
 second_net = parse_net(raw_second_net)
 
-#print(json.dumps(second_net, indent=2))
-
 final_set, message = find_bisimulation(net1=first_net, net2=second_net)
 
 if len(final_set) > 0:

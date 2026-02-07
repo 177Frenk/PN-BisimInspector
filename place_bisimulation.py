@@ -13,8 +13,8 @@ class PlaceBisimulation:
         self.net1_m0, self.net2_m0 = self._build_start_marking()
 
         # build presets, postsets and label for every transition in both nets
-        self.net1_presets, self.net1_postsets, self.net1_labels = self._extract_transition_info(net1)
-        self.net2_presets, self.net2_postsets, self.net2_labels = self._extract_transition_info(net2)
+        self.net1_presets, self.net1_postsets, self.net1_labels = extract_transition_info(net1)
+        self.net2_presets, self.net2_postsets, self.net2_labels = extract_transition_info(net2)
 
     def _build_start_marking(self):
         """Return the initial marking m0 for both nets"""
@@ -33,50 +33,6 @@ class PlaceBisimulation:
                         l2.append(place["name"])
 
         return Counter(l1), Counter(l2)
-
-    def _extract_transition_info(self, net):
-        """Extract and build presets, postsets and label for every transition"""
-        presets = {}
-        postsets = {}
-        labels = {}
-
-        # cycling through all transitions
-        for transition in net["transitions"]:
-            t_id = transition["id"]
-            t_name = transition["name"]
-
-            preset = []
-            postset = []
-
-            # cycling through all arcs
-            for arc in net["arcs"]:
-                weight = arc.get("weight", 1)
-
-                # arcs getting in the transition give us places in preset
-                if arc["end"] == t_id:
-                    place_name = self._get_place_name(net, arc["start"])
-                    # creating a list with as many equal places as is the arc weight and then adding all of them
-                    # individually to preset list
-                    preset.extend([place_name] * weight)
-
-                # arcs getting out the transition give us places in postset
-                elif arc["start"] == t_id:
-                    place_name = self._get_place_name(net, arc["end"])
-                    postset.extend([place_name] * weight)
-
-            # using transitions id as the key due to the possibility of multiple transitions equally labeled
-            presets[t_id] = Counter(preset)
-            postsets[t_id] = Counter(postset)
-            labels[t_id] = t_name
-
-        return presets, postsets, labels
-
-    def _get_place_name(self, net, place_id):
-        """Return a place name given a net and a place id"""
-        for place in net["places"]:
-            if place["id"] == place_id:
-                return place["name"]
-        return None
 
     def build_rr(self, first_net_transition_postset, second_net_transition_postset):
         """Build only valid RR set. If transitions differ then the couple is pruned."""
@@ -233,6 +189,50 @@ def check_labels(first_place_transitions_label, second_place_transitions_label):
     the relation. e.g. A = ['prod'], B = ['prod', 'prod'] ok, instead if B = ['prod', 'prod', 'del'] no"""
 
     return Counter(first_place_transitions_label).keys() == Counter(second_place_transitions_label).keys()
+
+def get_place_name(net, place_id):
+    """Return a place name given a net and a place id"""
+    for place in net["places"]:
+        if place["id"] == place_id:
+            return place["name"]
+    return None
+
+def extract_transition_info(net):
+    """Extract and build presets, postsets and label for every transition"""
+    presets = {}
+    postsets = {}
+    labels = {}
+
+    # cycling through all transitions
+    for transition in net["transitions"]:
+        t_id = transition["id"]
+        t_name = transition["name"]
+
+        preset = []
+        postset = []
+
+        # cycling through all arcs
+        for arc in net["arcs"]:
+            weight = arc.get("weight", 1)
+
+            # arcs getting in the transition give us places in preset
+            if arc["end"] == t_id:
+                place_name = get_place_name(net, arc["start"])
+                # creating a list with as many equal places as is the arc weight and then adding all of them
+                # individually to preset list
+                preset.extend([place_name] * weight)
+
+            # arcs getting out the transition give us places in postset
+            elif arc["start"] == t_id:
+                place_name = get_place_name(net, arc["end"])
+                postset.extend([place_name] * weight)
+
+        # using transitions id as the key due to the possibility of multiple transitions equally labeled
+        presets[t_id] = Counter(preset)
+        postsets[t_id] = Counter(postset)
+        labels[t_id] = t_name
+
+    return presets, postsets, labels
 
 def find_bisimulation(net1, net2):
     pb = PlaceBisimulation(net1=net1, net2=net2)
