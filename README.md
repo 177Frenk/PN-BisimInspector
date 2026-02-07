@@ -2,6 +2,11 @@
 PN-BisimInspector is a Bachelor’s thesis project focused on developing a dedicated tool for place bisimilarity analysis within P/T Petri Nets.
 
 ## How to use it
-In order to use the tool, first you will have to create the nets. You can do it here: https://petrinetsimulator.com.
-After you have drawn your nets, you have to save the .json files, rename them 'first_net.json' and 'second_net.json' 
-and put it inside the 'nets' folder.
+To use the tool, you first need to model your Petri Nets. You can use the Petri Net Simulator: https://petrinetsimulator.com  
+Once your nets are ready:
+
+Export them as .json files.
+
+Rename the files to 'first_net.json' and 'second_net.json'.
+
+Place them inside the nets/ directory.
