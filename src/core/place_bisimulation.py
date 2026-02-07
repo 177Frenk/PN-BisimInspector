@@ -1,6 +1,6 @@
 import itertools
 from collections import Counter
-from custom_exception import LabelMismatchException, MarkingSizeException, DifferentTransitionsException
+from src.utils.custom_exception import LabelMismatchException, MarkingSizeException, DifferentTransitionsException
 
 
 class PlaceBisimulation:

@@ -1,6 +1,6 @@
 import json
-from petri_parser import parse_net
-from place_bisimulation import find_bisimulation
+from src.utils.petri_parser import parse_net
+from src.core.place_bisimulation import find_bisimulation
 
 with open('nets/first_net.json', 'r') as file:
     raw_first_net = json.load(file)
