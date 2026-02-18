@@ -130,40 +130,44 @@ class PlaceBisimulation:
                                                              first_net_label=first_place_transitions_label,
                                                              second_net_label=second_place_transitions_label)
 
-                            # start cycling through all transitions in both nets for the couple under examination
-                            for transition1 in first_place_transitions_id:
-                                first_net_transition_label = self.net1_labels[transition1]
-                                first_net_transition_postset = self.net1_postsets[transition1]
-                                for transition2 in second_place_transitions_id:
-                                    second_net_transition_label = self.net2_labels[transition2]
-                                    second_net_transition_postset = self.net2_postsets[transition2]
+                            # if the selected couple can't perform transitions both ways the possible solution is re-appended in rr for further verifications
+                            if not first_place_transitions_id:
+                                rr.append(possible_solution)
+                            else:
+                                # start cycling through all transitions in both nets for the couple under examination
+                                for transition1 in first_place_transitions_id:
+                                    first_net_transition_label = self.net1_labels[transition1]
+                                    first_net_transition_postset = self.net1_postsets[transition1]
+                                    for transition2 in second_place_transitions_id:
+                                        second_net_transition_label = self.net2_labels[transition2]
+                                        second_net_transition_postset = self.net2_postsets[transition2]
 
-                                    # check if the post sets produced are in R+. If not raises a Marking Size Exception
-                                    if (first_net_transition_label == second_net_transition_label
-                                            and sum(first_net_transition_postset.values())
-                                            == sum(second_net_transition_postset.values())):
+                                        # check if the post sets produced are in R+. If not raises a Marking Size Exception
+                                        if (first_net_transition_label == second_net_transition_label
+                                                and sum(first_net_transition_postset.values())
+                                                == sum(second_net_transition_postset.values())):
 
-                                        # expands the couple and return new valid couples to be attached to the solution and the discarded ones due to transitions labels difference
-                                        new_couples, discarded_couples = self.build_rr(
-                                            first_net_transition_postset,
-                                            second_net_transition_postset)
+                                            # expands the couple and return new valid couples to be attached to the solution and the discarded ones due to transitions labels difference
+                                            new_couples, discarded_couples = self.build_rr(
+                                                first_net_transition_postset,
+                                                second_net_transition_postset)
 
-                                        # if there isn't at least one new valid couple then it raises a Different Transitions Exception
-                                        if not new_couples:
-                                            raise DifferentTransitionsException(discarded_couples)
+                                            # if there isn't at least one new valid couple then it raises a Different Transitions Exception
+                                            if not new_couples:
+                                                raise DifferentTransitionsException(discarded_couples)
 
-                                        # for every new valid couple it extends the current solution with the new couple creating new possible solutions to be examined
-                                        for n_c in new_couples:
-                                            current_solution = possible_solution.copy()
+                                            # for every new valid couple it extends the current solution with the new couple creating new possible solutions to be examined
+                                            for n_c in new_couples:
+                                                current_solution = possible_solution.copy()
 
-                                            current_solution.update(n_c)
+                                                current_solution.update(n_c)
 
-                                            # add the new possible solution to RR only if not already present
-                                            if current_solution not in rr:
-                                                rr.append(current_solution)
-                                    else:
-                                        raise MarkingSizeException(p1=couple[0], p2=couple[1],
-                                                                      label=first_net_transition_label)
+                                                # add the new possible solution to RR only if not already present
+                                                if current_solution not in rr:
+                                                    rr.append(current_solution)
+                                        else:
+                                            raise MarkingSizeException(p1=couple[0], p2=couple[1],
+                                                                          label=first_net_transition_label)
 
                         # for every exception it updates the error message to be displayed to the user and remove the invalid solutions from RR
                         except (LabelMismatchException, MarkingSizeException, DifferentTransitionsException) as e:
@@ -173,9 +177,6 @@ class PlaceBisimulation:
                         # when the expansion finish without problems it marks the couple as expanded
                         else:
                             expanded_couples.append(couple)
-                            # if the expansion has ended correctly because we were in a couple with no transitions it adds again the solution to RR in order to expand the other couples
-                            if not first_place_transitions_id:
-                                rr.append(possible_solution)
 
                         # break the cycle in order to check a new solution
                         break
