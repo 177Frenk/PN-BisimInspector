@@ -6,7 +6,7 @@ To use the tool, you first need to model your Petri Nets. You can use the [Onlin
 
 Export them as .json files.
 
-Otherwise, you can directly write your net as a .json file following this structure:
+Otherwise, you can directly write your net as a .json file following this schema:
 ```json
 {
   "places":[
