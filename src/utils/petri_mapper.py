@@ -1,4 +1,4 @@
-def parse_net(data):
+def map_net(data):
     """Take a Petri Net JSON from online editor in input and return a new and cleaned Petri Net dictionary"""
 
     net_to_return = {}

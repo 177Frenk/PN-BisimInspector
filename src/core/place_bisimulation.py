@@ -101,7 +101,7 @@ class PlaceBisimulation:
 
     def try_bisimulation(self, rr):
         """Implements the main cycle where tests the forward and backward behavior"""
-        r = []
+        r = set()
         expanded_couples = []
         message = ""
 
@@ -181,7 +181,7 @@ class PlaceBisimulation:
                         # break the cycle in order to check a new solution
                         break
             else:
-                r = possible_solution
+                r.update(possible_solution)
 
         return r, message
 

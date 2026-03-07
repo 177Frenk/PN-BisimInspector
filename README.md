@@ -6,6 +6,37 @@ To use the tool, you first need to model your Petri Nets. You can use the [Onlin
 
 Export them as .json files.
 
-Rename the files to 'first_net.json' and 'second_net.json'.
+Otherwise, you can directly write your net as a .json file following this structure:
+```json
+{
+  "places":[
+    {
+      "id": "<string>", 
+      "name": "<string>", 
+      "nTokens": "<number>"
+    }
+  ], 
+  "transitions":[
+    {
+      "id": "<string>", 
+      "name": "<string>"
+    }
+  ], 
+  "arcs":[
+    {
+      "id": "<string>", 
+      "name": "<string>", 
+      "start": "<string>", 
+      "end": "<string>", 
+      "weight": "<number>"
+    }
+  ], 
+  "nPlaces": "<number>", 
+  "nTransitions": "<number>", 
+  "nArcs": "<number>"
+}
+```
+
+Save the files as 'first_net.json' and 'second_net.json' as if no valid input will be provided by the user, these will be the default values.
 
 Place them inside the nets/ directory.
