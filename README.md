@@ -37,6 +37,6 @@ Otherwise, you can directly write your net as a .json file following this schema
 }
 ```
 
-Save the files as 'first_net.json' and 'second_net.json' as if no valid input will be provided by the user, these will be the default values.
+Save the files as 'first_net.json' and 'second_net.json' because if no valid input is provided by the user, these will be the default values.
 
 Place them inside the nets/ directory.
