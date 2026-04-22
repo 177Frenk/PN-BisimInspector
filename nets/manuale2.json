@@ -1,0 +1,62 @@
+{
+  "places":[
+    {
+      "id": "p1",
+      "name": "A'",
+      "nTokens": 1
+    },
+    {
+      "id": "p2",
+      "name": "B'",
+      "nTokens": 0
+    },
+    {
+      "id": "p3",
+      "name": "C'",
+      "nTokens": 0
+    }
+  ],
+  "transitions":[
+    {
+      "id": "t1",
+      "name": "a"
+    },
+    {
+      "id": "t2",
+      "name": "b"
+    }
+  ],
+  "arcs":[
+    {
+      "id": "a1",
+      "name": "a1",
+      "start": "p1",
+      "end": "t1",
+      "weight": 1
+    },
+    {
+      "id": "a2",
+      "name": "a2",
+      "start": "p1",
+      "end": "t2",
+      "weight": 1
+    },
+    {
+      "id": "a3",
+      "name": "a3",
+      "start": "t1",
+      "end": "p2",
+      "weight": 1
+    },
+    {
+      "id": "a4",
+      "name": "a4",
+      "start": "t2",
+      "end": "p3",
+      "weight": 1
+    }
+  ],
+  "nPlaces": 3,
+  "nTransitions": 2,
+  "nArcs": 4
+}

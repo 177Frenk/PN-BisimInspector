@@ -2,5 +2,4 @@
 .idea/
 __pycache__/
 *.pyc
-nets/*.json
 !nets/.gitkeep

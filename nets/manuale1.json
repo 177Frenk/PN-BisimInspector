@@ -1,0 +1,92 @@
+{
+  "places":[
+    {
+      "id": "p1",
+      "name": "A",
+      "nTokens": 1
+    },
+    {
+      "id": "p2",
+      "name": "B",
+      "nTokens": 0
+    },
+    {
+      "id": "p3",
+      "name": "C",
+      "nTokens": 0
+    },
+    {
+      "id": "p4",
+      "name": "D",
+      "nTokens": 0
+    }
+  ],
+  "transitions":[
+    {
+      "id": "t1",
+      "name": "a"
+    },
+    {
+      "id": "t2",
+      "name": "b"
+    },
+    {
+      "id": "t3",
+      "name": "c"
+    }
+  ],
+  "arcs":[
+    {
+      "id": "a1",
+      "name": "a1",
+      "start": "p1",
+      "end": "t1",
+      "weight": 1
+    },
+    {
+      "id": "a2",
+      "name": "a2",
+      "start": "p1",
+      "end": "t2",
+      "weight": 1
+    },
+    {
+      "id": "a3",
+      "name": "a3",
+      "start": "t1",
+      "end": "p2",
+      "weight": 1
+    },
+    {
+      "id": "a4",
+      "name": "a4",
+      "start": "t2",
+      "end": "p3",
+      "weight": 1
+    },
+    {
+      "id": "a5",
+      "name": "a5",
+      "start": "p2",
+      "end": "t3",
+      "weight": 1
+    },
+    {
+      "id": "a6",
+      "name": "a6",
+      "start": "p3",
+      "end": "t3",
+      "weight": 1
+    },
+    {
+      "id": "a7",
+      "name": "a7",
+      "start": "t3",
+      "end": "p4",
+      "weight": 1
+    }
+  ],
+  "nPlaces": 4,
+  "nTransitions": 3,
+  "nArcs": 7
+}
